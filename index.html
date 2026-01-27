@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Essam Store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- TOGGLE DARK MODE -->
+    <button class="mode-toggle" onclick="toggleMode()">🌙</button>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <div class="logo">ESSAM STORE</div>
+        <nav>
+            <a href="#">الرئيسية</a>
+            <a href="#">البطاقات</a>
+            <a href="#">العروض</a>
+            <a href="#">تواصل معنا</a>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>كل البطاقات في مكان واحد</h1>
+        <p>ألوان فاتحة • تصميم أنيق • تجربة فاخرة</p>
+    </section>
+
+    <!-- CARDS -->
+    <section class="cards-section">
+        <h2 class="section-title">البطاقات المتوفرة</h2>
+
+        <div class="grid">
+            <div class="card">
+                <div class="img"></div>
+                <h3>بطاقة 1</h3>
+                <p>وصف بسيط للبطاقة.</p>
+            </div>
+
+            <div class="card">
+                <div class="img"></div>
+                <h3>بطاقة 2</h3>
+                <p>وصف بسيط للبطاقة.</p>
+            </div>
+
+            <div class="card">
+                <div class="img"></div>
+                <h3>بطاقة 3</h3>
+                <p>وصف بسيط للبطاقة.</p>
+            </div>
+
+            <div class="card">
+                <div class="img"></div>
+                <h3>بطاقة 4</h3>
+                <p>وصف بسيط للبطاقة.</p>
+            </div>
+        </div>
+    </section>
+
+
+<script>
+function toggleMode() {
+    document.body.classList.toggle("dark");
+}
+</script>
+
+</body>
+</html>
+<!-- CATEGORIES SECTION -->
+<section class="categories">
+    <h2 class="section-title-light">التصنيفات</h2>
+
+    <div class="cat-grid">
+
+        <div class="cat-box">
+            <div class="icon">🎮</div>
+            <h3>بطاقات الألعاب</h3>
+            <p>بطاقات بلايستيشن، اكس بوكس، نينتندو والمزيد.</p>
+        </div>
+
+        <div class="cat-box">
+            <div class="icon">💳</div>
+            <h3>بطاقات الدفع</h3>
+            <p>بطاقات ستيم، قوقل بلاي، آيتونز وغيرها.</p>
+        </div>
+
+        <div class="cat-box">
+            <div class="icon">🔥</div>
+            <h3>عروض خاصة</h3>
+            <p>خصومات يومية على أفضل البطاقات.</p>
+        </div>
+
+        <div class="cat-box">
+            <div class="icon">⭐</div>
+            <h3>الأكثر مبيعًا</h3>
+            <p>أفضل البطاقات المطلوبة هذا الأسبوع.</p>
+        </div>
+
+    </div>
+</section>
+
+  <!-- FOOTER -->
+    <footer class="footer">
+        <p>© 2026 Essam Store — جميع الحقوق محفوظة</p>
+    </footer>
+    <!-- OFFERS SECTION -->
+<section class="offers">
+    <h2 class="section-title-light">عروض اليوم</h2>
+
+    <div class="offers-grid">
+
+        <div class="offer-box">
+            <div class="offer-info">
+                <h3>خصم 20%</h3>
+                <p>على بطاقات بلايستيشن</p>
+            </div>
+            <div class="offer-icon">🎮</div>
+        </div>
+
+        <div class="offer-box">
+            <div class="offer-info">
+                <h3>عرض 1+1</h3>
+                <p>على بطاقات ستيم</p>
+            </div>
+            <div class="offer-icon">🔥</div>
+        </div>
+
+        <div class="offer-box">
+            <div class="offer-info">
+                <h3>خصم 15%</h3>
+                <p>على بطاقات آيتونز</p>
+            </div>
+            <div class="offer-icon">💳</div>
+        </div>
+
+    </div>
+</section>
