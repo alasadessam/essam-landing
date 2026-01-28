@@ -4,43 +4,1046 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Essam Store</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ROOT COLORS */
+        :root {
+            --bg: #f7f7f7;
+            --text: #222;
+            --card: #ffffff;
+            --border: rgba(0,0,0,0.1);
+            --accent: #8b5cf6; /* بنفسجي رايق */
+        }
+
+        body.dark {
+            --bg: #0b0b0b;
+            --text: #fff;
+            --card: #161616;
+            --border: rgba(255,255,255,0.1);
+            --accent: #c084fc;
+        }
+
+        /* GENERAL */
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: 0.3s;
+        }
+
+        section {
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 0.9s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(25px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        body, section, div, input, button {
+            transition: background 0.3s, color 0.3s, border 0.3s;
+        }
+
+        /* LOADER */
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* DARK MODE BUTTON */
+        .mode-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 20;
+            transition: 0.3s;
+        }
+
+        .mode-toggle:hover {
+            transform: scale(1.1);
+            filter: brightness(1.1);
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 18px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .navbar nav a {
+            margin-left: 25px;
+            color: var(--text);
+            text-decoration: none;
+            transition: 0.25s;
+        }
+
+        .navbar nav a:hover {
+            color: var(--accent);
+        }
+
+        /* HERO – دلع إضافي */
+        .hero {
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 90px;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(circle at top, rgba(139,92,246,0.18), transparent 55%), var(--bg);
+        }
+
+        .hero-glow {
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139,92,246,0.35), transparent 70%);
+            filter: blur(10px);
+            top: -80px;
+            right: -60px;
+            opacity: 0.7;
+        }
+
+        .hero-particles {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle, rgba(139,92,246,0.18) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.35;
+            animation: particlesMove 18s linear infinite;
+        }
+
+        @keyframes particlesMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-40px); }
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            margin: 0;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-shadow: 0 0 12px rgba(139,92,246,0.35);
+        }
+
+        .hero p {
+            margin-top: 15px;
+            opacity: 0.85;
+            font-size: 1.1rem;
+        }
+
+        .hero-actions {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            padding: 12px 26px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.25s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .btn-primary:hover,
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.1);
+        }
+
+        /* SECTION TITLE */
+        .section-title-light {
+            text-align: center;
+            font-size: 2rem;
+            margin: 60px 0 40px;
+            color: var(--accent);
+            letter-spacing: 1px;
+            font-weight: 700;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0 0 0px var(--accent); }
+            50% { text-shadow: 0 0 12px var(--accent); }
+            100% { text-shadow: 0 0 0px var(--accent); }
+        }
+
+        /* CARDS SECTION (الرئيسية) */
+        .cards-section {
+            padding: 0 50px 80px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .card:hover {
+            transform: rotateX(6deg) rotateY(-6deg);
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.25);
+        }
+
+        .card .img {
+            height: 140px;
+            background: #ddd;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: 0.3s ease;
+        }
+
+        body.dark .card .img {
+            background: #242424;
+        }
+
+        .card .img:hover {
+            transform: scale(1.03);
+        }
+
+        .card h3 {
+            margin: 10px 0;
+            color: var(--accent);
+        }
+
+        .card p {
+            opacity: 0.75;
+        }
+
+        /* CATEGORIES */
+        .categories {
+            padding: 80px 50px;
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        body.dark .categories {
+            background: #111;
+            color: #fff;
+        }
+
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .cat-box {
+            background: #fff;
+            padding: 25px;
+            border-radius: 14px;
+            text-align: center;
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        body.dark .cat-box {
+            background: #1a1a1a;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .cat-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+        }
+
+        .icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .cat-box h3 {
+            margin: 10px 0;
+            color: var(--accent);
+        }
+
+        .cat-box p {
+            opacity: 0.75;
+        }
+
+        /* OFFERS */
+        .offers {
+            padding: 80px 50px;
+            background: #ffffff;
+            color: #222;
+        }
+
+        body.dark .offers {
+            background: #121212;
+            color: #fff;
+        }
+
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .offer-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .offer-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.25);
+        }
+
+        .offer-info h3 {
+            margin: 0;
+            font-size: 1.6rem;
+            color: var(--accent);
+        }
+
+        .offer-info p {
+            margin: 5px 0 0;
+            opacity: 0.75;
+        }
+
+        .offer-icon {
+            font-size: 2.5rem;
+            opacity: 0.9;
+        }
+
+        /* SEARCH SECTION */
+        .search-section {
+            padding: 80px 50px;
+            background: #f7f7f7;
+            color: #222;
+            text-align: center;
+        }
+
+        body.dark .search-section {
+            background: #111;
+            color: #fff;
+        }
+
+        .search-box {
+            margin: 30px auto 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            max-width: 600px;
+        }
+
+        .search-box input {
+            width: 70%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.25);
+        }
+
+        .search-box button {
+            padding: 14px 25px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .search-box button:hover {
+            background: #a678ff;
+            transform: translateY(-2px);
+        }
+
+        /* TOP CARDS */
+        .top-cards {
+            padding: 80px 50px;
+            background: #ffffff;
+            color: #222;
+        }
+
+        body.dark .top-cards {
+            background: #111;
+            color: #fff;
+        }
+
+        .top-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .top-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 14px;
+            text-align: center;
+            transition: 0.3s;
+            transform-style: preserve-3d;
+        }
+
+        .top-card:hover {
+            transform: rotateX(6deg) rotateY(-6deg);
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.25);
+        }
+
+        .top-img {
+            height: 150px;
+            background: #ddd;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: 0.3s;
+        }
+
+        body.dark .top-img {
+            background: #242424;
+        }
+
+        .top-img:hover {
+            transform: scale(1.03);
+        }
+
+        .top-card h3 {
+            margin: 10px 0;
+            color: var(--accent);
+        }
+
+        .top-card p {
+            opacity: 0.75;
+        }
+
+        /* TESTIMONIALS */
+        .testimonials-light {
+            padding: 80px 50px;
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        body.dark .testimonials-light {
+            background: #121212;
+            color: #fff;
+        }
+
+        .test-grid-light {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .test-box-light {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 25px;
+            width: 280px;
+            border-radius: 14px;
+            text-align: center;
+            font-style: italic;
+            transition: 0.3s;
+        }
+
+        .test-box-light:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
+        }
+
+        .test-box-light span {
+            display: block;
+            margin-top: 10px;
+            opacity: 0.7;
+        }
+
+        /* PAYMENTS */
+        .payments {
+            padding: 80px 50px;
+            background: #ffffff;
+            color: #222;
+        }
+
+        body.dark .payments {
+            background: #111;
+            color: #fff;
+        }
+
+        .pay-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .pay-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 14px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .pay-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
+        }
+
+        .pay-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* FAQ */
+        .faq-section {
+            padding: 80px 50px;
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        body.dark .faq-section {
+            background: #111;
+            color: #fff;
+        }
+
+        .faq-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        .faq-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
+        }
+
+        .faq-box h3 {
+            margin: 0 0 10px;
+            color: var(--accent);
+        }
+
+        .faq-box p {
+            opacity: 0.8;
+        }
+
+        /* LOGIN */
+        .login-section {
+            padding: 80px 50px;
+            background: #ffffff;
+            color: #222;
+            text-align: center;
+        }
+
+        body.dark .login-section {
+            background: #121212;
+            color: #fff;
+        }
+
+        .login-box {
+            max-width: 400px;
+            margin: auto;
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 30px;
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .login-box input {
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            transition: 0.3s;
+        }
+
+        .login-box input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.25);
+        }
+
+        .login-box button {
+            padding: 14px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-box button:hover {
+            background: #a678ff;
+            transform: translateY(-2px);
+        }
+
+        .register-text {
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        .register-text a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* CONTACT */
+        .contact-section {
+            padding: 80px 50px;
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        body.dark .contact-section {
+            background: #111;
+            color: #fff;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .contact-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 14px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .contact-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
+        }
+
+        .contact-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .contact-box h3 {
+            margin: 10px 0;
+            color: var(--accent);
+        }
+
+        .contact-box p {
+            opacity: 0.75;
+        }
+
+        /* BRANDS SLIDER */
+        .brands-section {
+            padding: 80px 50px;
+            background: #ffffff;
+            color: #222;
+            overflow: hidden;
+        }
+
+        body.dark .brands-section {
+            background: #121212;
+            color: #fff;
+        }
+
+        .brands-slider {
+            display: flex;
+            gap: 40px;
+            animation: slideBrands 18s linear infinite;
+            margin-top: 30px;
+        }
+
+        @keyframes slideBrands {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .brand {
+            font-size: 1.4rem;
+            opacity: 0.8;
+            white-space: nowrap;
+        }
+
+        /* SITEMAP */
+        .sitemap-section {
+            padding: 80px 50px;
+            background: #f7f7f7;
+            color: #222;
+        }
+
+        body.dark .sitemap-section {
+            background: #111;
+            color: #fff;
+        }
+
+        .sitemap-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .sitemap-col h3 {
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        .sitemap-col a {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+
+        .sitemap-col a:hover {
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        /* SEASONAL OFFERS */
+        .season-section {
+            padding: 80px 50px;
+            background: #ffffff;
+            color: #222;
+        }
+
+        body.dark .season-section {
+            background: #121212;
+            color: #fff;
+        }
+
+        .season-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .season-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 14px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .season-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
+        }
+
+        .season-box h3 {
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+        .season-box p {
+            opacity: 0.75;
+        }
+
+        /* VIDEO SECTION */
+        .video-section {
+            padding: 80px 50px;
+            text-align: center;
+        }
+
+        .promo-video {
+            width: 80%;
+            border-radius: 14px;
+            border: 2px solid var(--accent);
+            max-width: 800px;
+        }
+
+        /* STATS */
+        .stats {
+            padding: 80px 50px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            text-align: center;
+            flex-wrap: wrap;
+        }
+
+        .stat-box h3 {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .stat-box p {
+            opacity: 0.8;
+        }
+
+        /* APP DOWNLOAD */
+        .app-download {
+            padding: 80px 50px;
+            text-align: center;
+        }
+
+        .app-buttons button {
+            margin: 10px;
+            padding: 14px 25px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .app-buttons button:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.1);
+        }
+
+        /* MEGA FOOTER */
+        .mega-footer {
+            padding: 80px 50px;
+            background: #0a0a0a;
+            color: #fff;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+
+        .mega-footer a {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .mega-footer a:hover {
+            color: #fff;
+        }
+
+        .mega-footer p {
+            opacity: 0.8;
+        }
+
+        /* BACK TO TOP */
+        .to-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: none;
+            transition: 0.3s;
+            z-index: 50;
+        }
+
+        .to-top.show {
+            display: block;
+        }
+
+        .to-top:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.1);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 992px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .cat-grid,
+            .offers-grid,
+            .top-grid,
+            .pay-grid,
+            .season-grid,
+            .sitemap-grid,
+            .contact-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+            .hero {
+                padding: 100px 20px 60px;
+            }
+            .grid,
+            .cat-grid,
+            .offers-grid,
+            .top-grid,
+            .pay-grid,
+            .season-grid,
+            .sitemap-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            .search-box {
+                flex-direction: column;
+            }
+            .search-box input {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- TOGGLE DARK MODE -->
+    <!-- LOADER -->
+    <div class="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- DARK MODE TOGGLE -->
     <button class="mode-toggle" onclick="toggleMode()">🌙</button>
+
+    <!-- BACK TO TOP -->
+    <button class="to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
 
     <!-- NAVBAR -->
     <header class="navbar">
         <div class="logo">ESSAM STORE</div>
         <nav>
-            <a href="#">الرئيسية</a>
-            <a href="#">البطاقات</a>
-            <a href="#">العروض</a>
-            <a href="#">تواصل معنا</a>
+            <a href="#hero">الرئيسية</a>
+            <a href="#cards">البطاقات</a>
+            <a href="#offers">العروض</a>
+            <a href="#contact">تواصل معنا</a>
         </nav>
     </header>
 
     <!-- HERO -->
-    <section class="hero">
-        <h1>كل البطاقات في مكان واحد</h1>
-        <p>ألوان فاتحة • تصميم أنيق • تجربة فاخرة</p>
+    <section class="hero" id="hero">
+        <div class="hero-glow"></div>
+        <div class="hero-particles"></div>
+        <div class="hero-inner">
+            <h1>كل البطاقات في مكان واحد</h1>
+            <p>ألوان فاتحة • تصميم أنيق • تجربة فاخرة مع دعم كامل للـ Dark Mode</p>
+            <div class="hero-actions">
+                <button class="btn-primary" onclick="document.querySelector('#cards').scrollIntoView({behavior:'smooth'})">
+                    استعرض البطاقات
+                </button>
+                <button class="btn-secondary" onclick="document.querySelector('#search').scrollIntoView({behavior:'smooth'})">
+                    ابحث عن بطاقتك
+                </button>
+            </div>
+        </div>
     </section>
 
-    <!-- CARDS -->
-    <section class="cards-section">
-        <h2 class="section-title">البطاقات المتوفرة</h2>
-</section>
-<!-- SEARCH SECTION -->
-<section class="search-section">
-    <h2 class="section-title-light">ابحث عن بطاقتك</h2>
+    <!-- CARDS GRID -->
+    <section class="cards-section" id="cards">
+        <h2 class="section-title-light">البطاقات المتوفرة</h2>
 
-    <div class="search-box">
-        <input type="text" placeholder="اكتب اسم البطاقة...">
-        <button>بحث</button>
-    </div>
-</section>
         <div class="grid">
             <div class="card">
                 <div class="img"></div>
@@ -68,107 +1071,357 @@
         </div>
     </section>
 
+    <!-- CATEGORIES SECTION -->
+    <section class="categories">
+        <h2 class="section-title-light">التصنيفات</h2>
 
-<script>
-function toggleMode() {
-    document.body.classList.toggle("dark");
-}
-</script>
+        <div class="cat-grid">
+            <div class="cat-box">
+                <div class="icon">🎮</div>
+                <h3>بطاقات الألعاب</h3>
+                <p>بطاقات بلايستيشن، اكس بوكس، نينتندو والمزيد.</p>
+            </div>
 
+            <div class="cat-box">
+                <div class="icon">💳</div>
+                <h3>بطاقات الدفع</h3>
+                <p>بطاقات ستيم، قوقل بلاي، آيتونز وغيرها.</p>
+            </div>
+
+            <div class="cat-box">
+                <div class="icon">🔥</div>
+                <h3>عروض خاصة</h3>
+                <p>خصومات يومية على أفضل البطاقات.</p>
+            </div>
+
+            <div class="cat-box">
+                <div class="icon">⭐</div>
+                <h3>الأكثر مبيعًا</h3>
+                <p>أفضل البطاقات المطلوبة هذا الأسبوع.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- OFFERS SECTION -->
+    <section class="offers" id="offers">
+        <h2 class="section-title-light">عروض اليوم</h2>
+
+        <div class="offers-grid">
+            <div class="offer-box">
+                <div class="offer-info">
+                    <h3>خصم 20%</h3>
+                    <p>على بطاقات بلايستيشن</p>
+                </div>
+                <div class="offer-icon">🎮</div>
+            </div>
+
+            <div class="offer-box">
+                <div class="offer-info">
+                    <h3>عرض 1+1</h3>
+                    <p>على بطاقات ستيم</p>
+                </div>
+                <div class="offer-icon">🔥</div>
+            </div>
+
+            <div class="offer-box">
+                <div class="offer-info">
+                    <h3>خصم 15%</h3>
+                    <p>على بطاقات آيتونز</p>
+                </div>
+                <div class="offer-icon">💳</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEARCH SECTION -->
+    <section class="search-section" id="search">
+        <h2 class="section-title-light">ابحث عن بطاقتك</h2>
+
+        <div class="search-box">
+            <input type="text" placeholder="اكتب اسم البطاقة...">
+            <button>بحث</button>
+        </div>
+    </section>
+
+    <!-- TOP CARDS SECTION -->
+    <section class="top-cards">
+        <h2 class="section-title-light">الأكثر مبيعًا</h2>
+
+        <div class="top-grid">
+            <div class="top-card">
+                <div class="top-img"></div>
+                <h3>بطاقة بلايستيشن</h3>
+                <p>الأكثر طلبًا هذا الأسبوع.</p>
+            </div>
+
+            <div class="top-card">
+                <div class="top-img"></div>
+                <h3>بطاقة ستيم</h3>
+                <p>الأفضل لعشاق الألعاب.</p>
+            </div>
+
+            <div class="top-card">
+                <div class="top-img"></div>
+                <h3>بطاقة آيتونز</h3>
+                <p>مناسبة للهدايا.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS SECTION -->
+    <section class="testimonials-light">
+        <h2 class="section-title-light">آراء العملاء</h2>
+
+        <div class="test-grid-light">
+            <div class="test-box-light">
+                <p>“خدمة ممتازة وسرعة في التسليم.”</p>
+                <span>- خالد</span>
+            </div>
+
+            <div class="test-box-light">
+                <p>“أفضل متجر بطاقات بلا منازع.”</p>
+                <span>- محمد</span>
+            </div>
+
+            <div class="test-box-light">
+                <p>“تعامل راقي وأسعار ممتازة.”</p>
+                <span>- عبدالله</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAYMENT METHODS -->
+    <section class="payments">
+        <h2 class="section-title-light">طرق الدفع</h2>
+
+        <div class="pay-grid">
+            <div class="pay-box">
+                <div class="pay-icon">💳</div>
+                <h3>مدى</h3>
+            </div>
+
+            <div class="pay-box">
+                <div class="pay-icon">💰</div>
+                <h3>STC Pay</h3>
+            </div>
+
+            <div class="pay-box">
+                <div class="pay-icon">📱</div>
+                <h3>Apple Pay</h3>
+            </div>
+
+            <div class="pay-box">
+                <div class="pay-icon">🌐</div>
+                <h3>Visa / Mastercard</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="faq-section">
+        <h2 class="section-title-light">الأسئلة الشائعة</h2>
+
+        <div class="faq-box">
+            <h3>كيف يتم تسليم البطاقات؟</h3>
+            <p>يتم إرسال البطاقة فورًا بعد الدفع عبر البريد الإلكتروني.</p>
+        </div>
+
+        <div class="faq-box">
+            <h3>هل البطاقات أصلية؟</h3>
+            <p>نعم، جميع البطاقات أصلية ومضمونة 100٪.</p>
+        </div>
+
+        <div class="faq-box">
+            <h3>هل يوجد استرجاع؟</h3>
+            <p>لا يمكن استرجاع البطاقات بعد تسليمها.</p>
+        </div>
+    </section>
+
+    <!-- LOGIN SECTION -->
+    <section class="login-section">
+        <h2 class="section-title-light">تسجيل الدخول</h2>
+
+        <div class="login-box">
+            <input type="text" placeholder="البريد الإلكتروني">
+            <input type="password" placeholder="كلمة المرور">
+            <button>تسجيل الدخول</button>
+            <p class="register-text">ما عندك حساب؟ <a href="#">إنشاء حساب</a></p>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact-section" id="contact">
+        <h2 class="section-title-light">تواصل معنا</h2>
+
+        <div class="contact-grid">
+            <div class="contact-box">
+                <div class="contact-icon">📧</div>
+                <h3>البريد الإلكتروني</h3>
+                <p>support@essamstore.com</p>
+            </div>
+
+            <div class="contact-box">
+                <div class="contact-icon">📱</div>
+                <h3>رقم التواصل</h3>
+                <p>+966 500 000 000</p>
+            </div>
+
+            <div class="contact-box">
+                <div class="contact-icon">📍</div>
+                <h3>الموقع</h3>
+                <p>السعودية — المنطقة الشرقية</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BRANDS SLIDER -->
+    <section class="brands-section">
+        <h2 class="section-title-light">شركاؤنا</h2>
+
+        <div class="brands-slider">
+            <div class="brand">🎮 PlayStation</div>
+            <div class="brand">🔥 Steam</div>
+            <div class="brand">🍎 Apple</div>
+            <div class="brand">🟦 Xbox</div>
+            <div class="brand">💳 Visa</div>
+            <div class="brand">💰 STC Pay</div>
+        </div>
+    </section>
+
+    <!-- SITEMAP SECTION -->
+    <section class="sitemap-section">
+        <h2 class="section-title-light">خريطة الموقع</h2>
+
+        <div class="sitemap-grid">
+            <div class="sitemap-col">
+                <h3>المتجر</h3>
+                <a href="#hero">الرئيسية</a>
+                <a href="#cards">البطاقات</a>
+                <a href="#offers">العروض</a>
+            </div>
+
+            <div class="sitemap-col">
+                <h3>الحساب</h3>
+                <a href="#">تسجيل الدخول</a>
+                <a href="#">إنشاء حساب</a>
+                <a href="#">طلباتي</a>
+            </div>
+
+            <div class="sitemap-col">
+                <h3>الدعم</h3>
+                <a href="#contact">تواصل معنا</a>
+                <a href="#">الأسئلة الشائعة</a>
+                <a href="#">سياسة الخصوصية</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEASONAL OFFERS -->
+    <section class="season-section">
+        <h2 class="section-title-light">عروض الموسم</h2>
+
+        <div class="season-grid">
+            <div class="season-box">
+                <h3>عرض الشتاء ❄️</h3>
+                <p>خصومات تصل إلى 30٪</p>
+            </div>
+
+            <div class="season-box">
+                <h3>عرض الصيف ☀️</h3>
+                <p>بطاقات إضافية مجانية</p>
+            </div>
+
+            <div class="season-box">
+                <h3>عرض رمضان 🌙</h3>
+                <p>خصومات خاصة طوال الشهر</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- VIDEO SECTION -->
+    <section class="video-section">
+        <h2 class="section-title-light">تعرف علينا</h2>
+        <video controls class="promo-video">
+            <source src="video.mp4" type="video/mp4">
+        </video>
+    </section>
+
+    <!-- STATS SECTION -->
+    <section class="stats">
+        <div class="stat-box">
+            <h3>+10,000</h3>
+            <p>عميل سعيد</p>
+        </div>
+
+        <div class="stat-box">
+            <h3>+50,000</h3>
+            <p>طلب مكتمل</p>
+        </div>
+
+        <div class="stat-box">
+            <h3>24/7</h3>
+            <p>دعم فني</p>
+        </div>
+    </section>
+
+    <!-- APP DOWNLOAD -->
+    <section class="app-download">
+        <h2 class="section-title-light">حمل تطبيقنا</h2>
+        <p>تجربة أسرع وأسهل.</p>
+
+        <div class="app-buttons">
+            <button>📱 App Store</button>
+            <button>🤖 Google Play</button>
+        </div>
+    </section>
+
+    <!-- MEGA FOOTER -->
+    <footer class="mega-footer">
+        <div class="footer-grid">
+            <div>
+                <h3>Essam Store</h3>
+                <p>أفضل متجر بطاقات رقمية بتصميم فاخر وتجربة سلسة.</p>
+            </div>
+
+            <div>
+                <h3>روابط</h3>
+                <a href="#hero">الرئيسية</a>
+                <a href="#cards">البطاقات</a>
+                <a href="#offers">العروض</a>
+            </div>
+
+            <div>
+                <h3>الدعم</h3>
+                <a href="#contact">تواصل معنا</a>
+                <a href="#search">ابحث عن بطاقة</a>
+                <a href="#">الأسئلة الشائعة</a>
+            </div>
+
+            <div>
+                <h3>تابعنا</h3>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // LOADER
+        window.onload = () => {
+            document.querySelector(".loader").style.display = "none";
+        };
+
+        // DARK MODE
+        function toggleMode() {
+            document.body.classList.toggle("dark");
+        }
+
+        // BACK TO TOP VISIBILITY
+        window.addEventListener("scroll", () => {
+            const btn = document.querySelector(".to-top");
+            if (window.scrollY > 400) btn.classList.add("show");
+            else btn.classList.remove("show");
+        });
+    </script>
 </body>
 </html>
-<!-- CATEGORIES SECTION -->
-<section class="categories">
-    <h2 class="section-title-light">التصنيفات</h2>
-
-    <div class="cat-grid">
-
-        <div class="cat-box">
-            <div class="icon">🎮</div>
-            <h3>بطاقات الألعاب</h3>
-            <p>بطاقات بلايستيشن، اكس بوكس، نينتندو والمزيد.</p>
-        </div>
-
-        <div class="cat-box">
-            <div class="icon">💳</div>
-            <h3>بطاقات الدفع</h3>
-            <p>بطاقات ستيم، قوقل بلاي، آيتونز وغيرها.</p>
-        </div>
-
-        <div class="cat-box">
-            <div class="icon">🔥</div>
-            <h3>عروض خاصة</h3>
-            <p>خصومات يومية على أفضل البطاقات.</p>
-        </div>
-
-        <div class="cat-box">
-            <div class="icon">⭐</div>
-            <h3>الأكثر مبيعًا</h3>
-            <p>أفضل البطاقات المطلوبة هذا الأسبوع.</p>
-        </div>
-
-    </div>
-</section>
-
-  <!-- FOOTER -->
-    <footer class="footer">
-        <p>© 2026 Essam Store — جميع الحقوق محفوظة</p>
-    </footer>
-    <!-- OFFERS SECTION -->
-<section class="offers">
-    <h2 class="section-title-light">عروض اليوم</h2>
-
-    <div class="offers-grid">
-
-        <div class="offer-box">
-            <div class="offer-info">
-                <h3>خصم 20%</h3>
-                <p>على بطاقات بلايستيشن</p>
-            </div>
-            <div class="offer-icon">🎮</div>
-        </div>
-
-        <div class="offer-box">
-            <div class="offer-info">
-                <h3>عرض 1+1</h3>
-                <p>على بطاقات ستيم</p>
-            </div>
-            <div class="offer-icon">🔥</div>
-        </div>
-
-        <div class="offer-box">
-            <div class="offer-info">
-                <h3>خصم 15%</h3>
-                <p>على بطاقات آيتونز</p>
-            </div>
-            <div class="offer-icon">💳</div>
-        </div>
-
-    </div>
-
-<!-- TOP CARDS SECTION -->
-<section class="top-cards">
-    <h2 class="section-title-light">أفضل البطاقات</h2>
-
-    <div class="top-grid">
-
-        <div class="top-card">
-            <div class="top-img"></div>
-            <h3>بلايستيشن</h3>
-            <p>الأكثر مبيعًا هذا الأسبوع</p>
-        </div>
-
-        <div class="top-card">
-            <div class="top-img"></div>
-            <h3>ستيم</h3>
-            <p>خصومات قوية</p>
-        </div>
-
-        <div class="top-card">
-            <div class="top-img"></div>
-            <h3>آيتونز</h3>
-            <p>طلب عالي جدًا</p>
-        </div>
-
-    </div>
-</section>
